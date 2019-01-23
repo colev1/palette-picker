@@ -71,8 +71,9 @@ app.get('/api/v1/projects', (request, response) => {
   response.json({projects});
 });
 
+
+//post request for adding a new project
 app.post('/api/v1/projects', (request, response) => {
-  console.log(request)
   const { project } = request.body;
   const id = Date.now();
   if(!project) {
@@ -85,25 +86,36 @@ app.post('/api/v1/projects', (request, response) => {
   }
 });
 
-app.post('/api/v1/palettes', (request, response) => {
+//post for adding palette to existing project
+app.post('/api/v1/projects/:project_id/palettes', (request, response) => {
   const { palette } = request.body;
   const id = Date.now();
-  if(!project) {
+  const { project_id } = request.params;
+  if(!palette) {
     return response.status(422).send({
       error: 'No palette property provided'
     });
   } else {
-    app.locals.palettes.push(palette);
+    app.locals.projects[project_id].push(palette);
+    // const project = app.locals.projects.find(currProj => currProj.id === project_id);
     return response.status(201).json({ id, palette });
   }
 });
 
-app.get('/api/v1/projects/:id', (request, response) => {
+app.get('/api/v1/projects/:id/palettes', (request, response) => {
   const { id } = request.params;
   const palettes = app.locals.palettes;
   const matchingPalettes = palettes.filter(palette => palette.project_id === parseInt(id))
   response.json({matchingPalettes});
 });
+
+app.delete('/api/v1/projects/:project_id/palettes/:id', (request, response) => {
+  const { id } = request.params;
+  // const palettes = app.locals.palettes;
+  // const matchingPalettes = palettes.filter(palette => palette.project_id !== parseInt(id))
+  // response.json({matchingPalettes});
+});
+
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);

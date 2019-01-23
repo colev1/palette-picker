@@ -41,6 +41,7 @@ function generateNewPalette () {
 
 function savePalette () {
   console.log(paletteInput.value)
+  
 }
 
 function togglePalette (e) {
