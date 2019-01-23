@@ -1,12 +1,15 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
+
+app.use( bodyParser.json() );
 
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Palette Picker';
 app.locals.projects = [
   {
-      id: 1,
-      name: 'Project 1'
+    id: 1,
+    name: 'Project 1'
   },
   {
     id: 2,
@@ -68,13 +71,39 @@ app.get('/api/v1/projects', (request, response) => {
   response.json({projects});
 });
 
+app.post('/api/v1/projects', (request, response) => {
+  console.log(request)
+  const { project } = request.body;
+  const id = Date.now();
+  if(!project) {
+    return response.status(422).send({
+      error: 'No project property provided'
+    });
+  } else {
+    app.locals.projects.push(project);
+    return response.status(201).json({ id, project });
+  }
+});
+
+app.post('/api/v1/palettes', (request, response) => {
+  const { palette } = request.body;
+  const id = Date.now();
+  if(!project) {
+    return response.status(422).send({
+      error: 'No palette property provided'
+    });
+  } else {
+    app.locals.palettes.push(palette);
+    return response.status(201).json({ id, palette });
+  }
+});
+
 app.get('/api/v1/projects/:id', (request, response) => {
   const { id } = request.params;
   const palettes = app.locals.palettes;
   const matchingPalettes = palettes.filter(palette => palette.project_id === parseInt(id))
   response.json({matchingPalettes});
 });
-
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
