@@ -2,6 +2,23 @@ main {
   display: grid;
   grid-template-columns: 400px 1fr;
   font-family: 'Ribeye', cursive;
+  color: #3E4E50;
+}
+
+
+button, input {
+  background: #3E4E50;
+  box-shadow: 4px 8px 4px rgba(238, 238, 238, 0.25);
+  border-radius: 12px;
+  font-family: Ribeye;
+  font-size: 24px;
+  color: white;
+  margin-bottom: 40px;
+}
+
+input {
+  background: white;
+  color: #3E4E50;
 }
 
 h1 {
@@ -32,6 +49,37 @@ section {
 
 .projects-container {
   background-color: #3E4E50;
+  color: white;
+}
+
+.projects-title {
+  background-color: #3E4E50;
+  color: white;
+  font-size: 32px; 
+}
+
+.project {
+  align-items: center;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+  justify-content: space-around;
+  width: 96%;
+}
+
+.proj {
+  font-size: 16px;
+  margin: 10px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .palette-container {
