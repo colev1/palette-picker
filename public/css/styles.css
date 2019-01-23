@@ -28,6 +28,10 @@ h1 {
   margin-bottom: 0px;
 }
 
+h2 {
+  margin-bottom: 0px;
+}
+
 .generate-btn {
   background: #3E4E50;
   box-shadow: 4px 8px 4px rgba(238, 238, 238, 0.25);
@@ -95,9 +99,8 @@ section {
 }
 
 .circle {
-  width: 160px;
-  height: 160px;
-  /* line-height: 200px; */
+  width: 10vw;
+  height: 10vw;
   background-color: black;
   border-radius: 50%
 }
