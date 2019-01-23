@@ -1,0 +1,60 @@
+main {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  font-family: 'Ribeye', cursive;
+}
+
+h1 {
+  font-family: 'Ribeye Marrow', cursive;
+  color: #3E4E50;
+  font-size: 52px;
+  margin-bottom: 0px;
+}
+
+.generate-btn {
+  background: #3E4E50;
+  box-shadow: 4px 8px 4px rgba(238, 238, 238, 0.25);
+  border-radius: 12px;
+  font-size: 28px;
+  font-family: 'Ribeye', cursive;
+  color: white;
+}
+
+section {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: space-around;
+  outline: solid 1px black;
+  background-color: #FACFAD;
+}
+
+.projects-container {
+  background-color: #3E4E50;
+}
+
+.palette-container {
+  height: 40%;
+  background-color: white;
+  width: 96%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+}
+
+.circle {
+  width: 160px;
+  height: 160px;
+  /* line-height: 200px; */
+  background-color: black;
+  border-radius: 50%
+}
+
+.hex {
+  text-align: center;
+  margin-top: 20px;
+}
