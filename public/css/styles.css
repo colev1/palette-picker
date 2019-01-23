@@ -28,6 +28,10 @@ h1 {
   margin-bottom: 0px;
 }
 
+h2 {
+  margin-bottom: 0px;
+}
+
 .generate-btn {
   background: #3E4E50;
   box-shadow: 4px 8px 4px rgba(238, 238, 238, 0.25);
@@ -82,6 +86,11 @@ section {
   align-items: center;
 }
 
+button:hover {
+  background-color: black;
+  cursor: pointer;
+}
+
 .palette-container {
   height: 40%;
   background-color: white;
@@ -95,11 +104,16 @@ section {
 }
 
 .circle {
-  width: 160px;
-  height: 160px;
-  /* line-height: 200px; */
-  background-color: black;
+  width: 10vw;
+  height: 10vw;
+  background-color: white;
+  border: solid 1px black;
   border-radius: 50%
+}
+
+.fa-lock:hover {
+  color: black;
+  cursor: pointer;
 }
 
 .hex {
