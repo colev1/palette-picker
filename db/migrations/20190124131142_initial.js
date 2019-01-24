@@ -1,4 +1,3 @@
-
 exports.up = function(knex, Promise) {
   return Promise.all([
     knex.schema.createTable('projects', function(table) {
@@ -21,7 +20,6 @@ exports.up = function(knex, Promise) {
     })
   ])
 };
-
 
 //why do you need to drop the tables down
 exports.down = function(knex, Promise) {

@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const environment = process.env.NODE_ENV || 'development';
+const configuration = require('./knexfile')[environment];
+const database = require('knex')(configuration);
 
 app.use( bodyParser.json() );
 
@@ -108,10 +111,10 @@ app.post('/api/v1/projects', (request, response) => {
 
 //post for adding palette to existing project that has already been created
 //what should this path be?
-app.post('/api/v1/projects/:project_id/palettes', (request, response) => {
+app.post('/api/v1/palettes', (request, response) => {
   const { palette } = request.body;
-  const id = Date.now();
-  const { project_id } = request.params;
+  // const id = Date.now();
+  const { project_id } = palette;
   if(!palette) {
     return response.status(422).send({
       error: 'No palette property provided'
