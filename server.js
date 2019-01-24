@@ -71,12 +71,20 @@ app.use(express.static('public'));
 
 
 //get request to all projects 
+// app.get('/api/v1/projects', (request, response) => {
+//   const projects = app.locals.projects;
+//   response.json({projects});
+// });
+
 app.get('/api/v1/projects', (request, response) => {
-  const projects = app.locals.projects;
-  response.json({projects});
+  database('projects').select()
+    .then((projects) => {
+      response.status(200).json(projects);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
 });
-
-
 
 //get all palettes from a specific project 
 app.get('/api/v1/projects/:id/palettes', (request, response) => {
