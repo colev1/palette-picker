@@ -66,27 +66,48 @@ app.locals.palettes = [
 
 app.use(express.static('public'));
 
+
+//get request to all projects 
 app.get('/api/v1/projects', (request, response) => {
   const projects = app.locals.projects;
   response.json({projects});
 });
 
 
+
+//get all palettes from a specific project 
+app.get('/api/v1/projects/:id/palettes', (request, response) => {
+  //get the id of project from the request path 
+  const { id } = request.params;
+  const palettes = app.locals.palettes;
+  //filter through the palettes and find the ones whose foreign key(project id) matches the proj id
+  const matchingPalettes = palettes.filter(palette => palette.project_id === parseInt(id))
+  if(matchingPalettes) {
+    response.json({matchingPalettes});
+  } else {
+    response.sendStatus(404)
+  }
+});
+
 //post request for adding a new project
 app.post('/api/v1/projects', (request, response) => {
+  //desctructure the new project from the body of the post request
   const { project } = request.body;
+  //create a unique id for the new project
   const id = Date.now();
   if(!project) {
     return response.status(422).send({
-      error: 'No project property provided'
+      error: 'No project provided'
     });
   } else {
+    //add the new project to the array of current projects
     app.locals.projects.push(project);
     return response.status(201).json({ id, project });
   }
 });
 
-//post for adding palette to existing project
+//post for adding palette to existing project that has already been created
+//what should this path be?
 app.post('/api/v1/projects/:project_id/palettes', (request, response) => {
   const { palette } = request.body;
   const id = Date.now();
@@ -102,18 +123,15 @@ app.post('/api/v1/projects/:project_id/palettes', (request, response) => {
   }
 });
 
-app.get('/api/v1/projects/:id/palettes', (request, response) => {
-  const { id } = request.params;
+//delete a palette from a specific project
+app.delete('/api/v1/palettes/:id', (request, response) => {
   const palettes = app.locals.palettes;
-  const matchingPalettes = palettes.filter(palette => palette.project_id === parseInt(id))
-  response.json({matchingPalettes});
-});
-
-app.delete('/api/v1/projects/:project_id/palettes/:id', (request, response) => {
-  const { id } = request.params;
-  // const palettes = app.locals.palettes;
-  // const matchingPalettes = palettes.filter(palette => palette.project_id !== parseInt(id))
-  // response.json({matchingPalettes});
+  const id = parseInt(request.params.id)
+  let filteredPalettes = palettes.filter((palette) => {
+    return palette.id !== id
+  })
+  palettes = filteredPalettes
+  response.status(200).json({filteredPalettes})
 });
 
 
