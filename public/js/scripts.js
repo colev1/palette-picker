@@ -1,9 +1,12 @@
 document.addEventListener("DOMContentLoaded", generateAllPalettes);
+document.addEventListener("DOMContentLoaded", fetchProjectNames);
+
 
 var generateBtn = document.querySelector('.generate-btn')
 var projectName = document.querySelector('.project-name')
 var saveProjectBtn = document.querySelector('.proj-btn');
 var newProjectInput = document.querySelector('.proj-input');
+var select = document.querySelector('select');
 
 var savePaletteBtn = document.querySelector('.save-btn')
 var paletteInput = document.querySelector('.palette-name')
@@ -33,6 +36,21 @@ function generateAllPalettes() {
   }
 }
 
+function fetchProjectNames () {
+  fetch('/api/v1/projects')
+    .then(response => response.json())
+    .then(result => displayProjectNames(result))
+}
+
+function displayProjectNames (projects) {
+  let projNames = projects.map(project => project.name)
+  select.options.length = projNames.length;
+  for (let i=0; i<projNames.length; i++) {
+    select.options[i] = new Option(`${projNames[i]}`)
+  }
+  console.log(projNames)
+}
+
 function generateNewPalette () {
     let randomHex = [];
     let newHex;
@@ -52,9 +70,27 @@ function savePalette () {
 }
 
 function saveProject () {
+  const postObj = {
+    project: {
+      name: newProjectInput.value
+    }
+  };
+  fetch('/api/v1/projects', {
+    method: 'POST',
+    body: JSON.stringify(postObj), // data can be `string` or {object}!
+    headers:  {
+    'Content-Type': 'application/json'
+    }
+  })
+    .then(response => response.json())
+    .then(result => displayNewProject(result))
+    .catch(error => console.log(error))
+}
+
+function displayNewProject (project) {
   var newProject = document.createElement('div');
   newProject.innerHTML = (`<div> 
-    <h3 class='project-name'>  ${newProjectInput.value} </h3>
+    <h3 class='project-name'>  ${project.name} </h3>
   </div>`);
   document.querySelector('.project').appendChild(newProject)
   newProjectInput.value = '';
