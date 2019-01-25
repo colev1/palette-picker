@@ -6,7 +6,7 @@ main {
 }
 
 
-button, input {
+button, input, select {
   background: #3E4E50;
   box-shadow: 4px 8px 4px rgba(238, 238, 238, 0.25);
   border-radius: 12px;
@@ -72,6 +72,7 @@ section {
   height: 400px;
   justify-content: space-around;
   width: 96%;
+  color: black;
 }
 
 .proj {
@@ -86,7 +87,7 @@ section {
   align-items: center;
 }
 
-button:hover {
+button:hover, select:hover {
   background-color: black;
   cursor: pointer;
 }
@@ -119,4 +120,8 @@ button:hover {
 .hex {
   text-align: center;
   margin-top: 20px;
+}
+
+.project-name {
+  color: black;
 }
