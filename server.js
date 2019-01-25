@@ -70,12 +70,7 @@ app.locals.palettes = [
 app.use(express.static('public'));
 
 
-//get request to all projects 
-// app.get('/api/v1/projects', (request, response) => {
-//   const projects = app.locals.projects;
-//   response.json({projects});
-// });
-
+//get all projects
 app.get('/api/v1/projects', (request, response) => {
   database('projects').select()
     .then((projects) => {
@@ -87,51 +82,73 @@ app.get('/api/v1/projects', (request, response) => {
 });
 
 //get all palettes from a specific project 
-app.get('/api/v1/projects/:id/palettes', (request, response) => {
-  //get the id of project from the request path 
-  const { id } = request.params;
-  const palettes = app.locals.palettes;
-  //filter through the palettes and find the ones whose foreign key(project id) matches the proj id
-  const matchingPalettes = palettes.filter(palette => palette.project_id === parseInt(id))
-  if(matchingPalettes) {
-    response.json({matchingPalettes});
-  } else {
-    response.sendStatus(404)
-  }
+app.get('/api/v1/projects/:id', (request, response) => {
+  const id = parseInt(request.params.id);
+  database('palettes').select()
+    .then((palettes) => {
+      //find the palettes whose project_id matches the request params id
+      const matchingPalettes = palettes.filter(palette => palette.project_id === id )
+      response.status(200).json(matchingPalettes);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
 });
+
+//get specific palette by using palette id
+app.get('/api/v1/projects/:id/palettes/:palette_id', (request, response) => {
+  const projectId = parseInt(request.params.id);
+  const paletteId = parseInt(request.params.palette_id);
+  database('palettes').select()
+    .then((palettes) => {
+      const matchingPalette = palettes.find(palette => palette.id === paletteId )
+      response.status(200).json(matchingPalette);
+    })
+  .catch((error) => {
+      response.status(500).json({ error });
+  });
+})
 
 //post request for adding a new project
 app.post('/api/v1/projects', (request, response) => {
   //desctructure the new project from the body of the post request
   const { project } = request.body;
   //create a unique id for the new project
-  const id = Date.now();
-  if(!project) {
-    return response.status(422).send({
-      error: 'No project provided'
-    });
-  } else {
-    //add the new project to the array of current projects
-    app.locals.projects.push(project);
-    return response.status(201).json({ id, project });
+  for( let requiredParameter of ['name'] ) {
+    if( !project[requiredParameter]) {
+      return response
+        .status(422)
+        .send({ error: `Expected format: { name: <String> }. You're missing a "${requiredParameter}" property.` });
+    }
   }
+  database('projects').insert(project, 'id')
+    .then(projectId => {
+      response.status(201).json({ ...project, id: projectId[0] })
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
 });
 
 //post for adding palette to existing project that has already been created
-//what should this path be?
-app.post('/api/v1/palettes', (request, response) => {
+app.post('/api/v1/projects/:id/palettes', (request, response) => {
+  //desctructure the new project from the body of the post request
   const { palette } = request.body;
-  // const id = Date.now();
-  const { project_id } = palette;
-  if(!palette) {
-    return response.status(422).send({
-      error: 'No palette property provided'
-    });
-  } else {
-    app.locals.projects[project_id].push(palette);
-    // const project = app.locals.projects.find(currProj => currProj.id === project_id);
-    return response.status(201).json({ id, palette });
+  const project_id = parseInt(request.params.id)
+  for( let requiredParameter of ['palette_name', 'color_1', 'color_2', 'color_3', 'color_4', 'color_5'] ) {
+    if( !palette[requiredParameter]) {
+      return response
+        .status(422)
+        .send({ error: `Expected format: { palette_name: <String>, color_1: <String>, color_2: <String>, color_3: <String>, color_4: <String>, color_5: <String> }. You're missing a "${requiredParameter}" property.` });
+    }
   }
+  database('palettes').insert({...palette, project_id}, 'id')
+    .then(paletteId => {
+      response.status(201).json({...palette, id: paletteId[0] })
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
 });
 
 //delete a palette from a specific project
