@@ -52,9 +52,27 @@ function savePalette () {
 }
 
 function saveProject () {
+  const postObj = {
+    project: {
+      name: newProjectInput.value
+    }
+  };
+  fetch('/api/v1/projects', {
+    method: 'POST',
+    body: JSON.stringify(postObj), // data can be `string` or {object}!
+    headers:  {
+    'Content-Type': 'application/json'
+    }
+  })
+    .then(response => response.json())
+    .then(result => displayNewProject(result))
+    .catch(error => console.log(error))
+}
+
+function displayNewProject (project) {
   var newProject = document.createElement('div');
   newProject.innerHTML = (`<div> 
-    <h3 class='project-name'>  ${newProjectInput.value} </h3>
+    <h3 class='project-name'>  ${project.name} </h3>
   </div>`);
   document.querySelector('.project').appendChild(newProject)
   newProjectInput.value = '';
