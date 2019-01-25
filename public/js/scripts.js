@@ -1,9 +1,12 @@
 document.addEventListener("DOMContentLoaded", generateAllPalettes);
+document.addEventListener("DOMContentLoaded", fetchProjectNames);
+
 
 var generateBtn = document.querySelector('.generate-btn')
 var projectName = document.querySelector('.project-name')
 var saveProjectBtn = document.querySelector('.proj-btn');
 var newProjectInput = document.querySelector('.proj-input');
+var select = document.querySelector('select');
 
 var savePaletteBtn = document.querySelector('.save-btn')
 var paletteInput = document.querySelector('.palette-name')
@@ -31,6 +34,21 @@ function generateAllPalettes() {
       allCircles[i].style.backgroundColor = `#${palettesArray[i]}`
     }
   }
+}
+
+function fetchProjectNames () {
+  fetch('/api/v1/projects')
+    .then(response => response.json())
+    .then(result => displayProjectNames(result))
+}
+
+function displayProjectNames (projects) {
+  let projNames = projects.map(project => project.name)
+  select.options.length = projNames.length;
+  for (let i=0; i<projNames.length; i++) {
+    select.options[i] = new Option(`${projNames[i]}`)
+  }
+  console.log(projNames)
 }
 
 function generateNewPalette () {
