@@ -151,17 +151,20 @@ app.post('/api/v1/projects/:id/palettes', (request, response) => {
     });
 });
 
-//delete a palette from a specific project
-app.delete('/api/v1/palettes/:id', (request, response) => {
-  const palettes = app.locals.palettes;
-  const id = parseInt(request.params.id)
-  let filteredPalettes = palettes.filter((palette) => {
-    return palette.id !== id
-  })
-  palettes = filteredPalettes
-  response.status(200).json({filteredPalettes})
-});
 
+//delete a palette from a project
+app.delete('/api/v1/projects/:id/palettes/:palette_id', (request, response) => {
+  const projectId = parseInt(request.params.id);
+  const paletteId = parseInt(request.params.palette_id);
+  database('palettes').select()
+    .then((palettes) => {
+      const matchingPalette = palettes.filter(palette => palette.id !== paletteId )
+      response.status(200).json(matchingPalette);
+    })
+  .catch((error) => {
+      response.status(500).json({ error });
+  })
+})
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
