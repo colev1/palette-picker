@@ -7,6 +7,12 @@ var projectName = document.querySelector('.project-name')
 var saveProjectBtn = document.querySelector('.proj-btn');
 var newProjectInput = document.querySelector('.proj-input');
 var select = document.querySelector('select');
+let color1 = document.querySelector('.hex-1')
+let color2 = document.querySelector('.hex-2')
+let color3 = document.querySelector('.hex-3')
+let color4 = document.querySelector('.hex-4')
+let color5 = document.querySelector('.hex-5')
+
 
 var savePaletteBtn = document.querySelector('.save-btn')
 var paletteInput = document.querySelector('.palette-name')
@@ -43,12 +49,10 @@ function fetchProjectNames () {
 }
 
 function displayProjectNames (projects) {
-  let projNames = projects.map(project => project.name)
-  select.options.length = projNames.length;
-  for (let i=0; i<projNames.length; i++) {
-    select.options[i] = new Option(`${projNames[i]}`)
+  select.options.length = projects.length;
+  for (let i=0; i<projects.length; i++) {
+    select.options[i] = new Option(`${projects[i].name}`, `${projects[i].id}`)
   }
-  console.log(projNames)
 }
 
 function generateNewPalette () {
@@ -63,10 +67,38 @@ function generateNewPalette () {
 }
 
 function savePalette () {
-  console.log(paletteInput.value)
-  projectName.innerHTML = paletteInput.value;
+  console.log(select.value)
+  const selectedProjectId = select.value;
+  // projectName.innerHTML = paletteInput.value;
   // var div = document.createElement('div');
   // div.innerHTML = ``
+  const postPalette = {
+      palette: {
+      palette_name: paletteInput,
+      color_1: color1.innerText,
+      color_2: color1.innerText,
+      color_3: color1.innerText,
+      color_4: color1.innerText,
+      color_5: color1.innerText,
+    }
+  }
+  
+  fetch(`/api/v1/projects/${selectedProjectId}/palettes`, {
+    method: 'POST',
+    body: JSON.stringify(postPalette), 
+    headers:  {
+    'Content-Type': 'application/json'
+    }
+  })
+    .then(response => response.json())
+    .then(result => displayNewPalette(result))
+    .catch(error => console.log(error))
+}
+
+function displayNewPalette (palette) {
+  let paletteText = document.querySelector(`.${palette.project_id}`)
+  console.log(paletteText)
+  paletteText.innerHTML = palette.color_1
 }
 
 function saveProject () {
@@ -85,12 +117,14 @@ function saveProject () {
     .then(response => response.json())
     .then(result => displayNewProject(result))
     .catch(error => console.log(error))
+    fetchProjectNames()
 }
 
 function displayNewProject (project) {
   var newProject = document.createElement('div');
   newProject.innerHTML = (`<div> 
     <h3 class='project-name'>  ${project.name} </h3>
+    <p class=${project.id} > </p>
   </div>`);
   document.querySelector('.project').appendChild(newProject)
   newProjectInput.value = '';

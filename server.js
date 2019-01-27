@@ -75,6 +75,7 @@ app.post('/api/v1/projects/:id/palettes', (request, response) => {
   //desctructure the new project from the body of the post request
   const { palette } = request.body;
   const project_id = parseInt(request.params.id)
+  console.log(project_id)
   for( let requiredParameter of ['palette_name', 'color_1', 'color_2', 'color_3', 'color_4', 'color_5'] ) {
     if( !palette[requiredParameter]) {
       return response
@@ -84,7 +85,7 @@ app.post('/api/v1/projects/:id/palettes', (request, response) => {
   }
   database('palettes').insert({...palette, project_id}, 'id')
     .then(paletteId => {
-      response.status(201).json({...palette, id: paletteId[0] })
+      response.status(201).json({...palette, project_id, id: paletteId[0] })
     })
     .catch(error => {
       response.status(500).json({ error });
