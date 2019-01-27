@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", generateAllPalettes);
 document.addEventListener("DOMContentLoaded", fetchProjectNames);
 
-
 var generateBtn = document.querySelector('.generate-btn')
 var projectName = document.querySelector('.project-name')
 var saveProjectBtn = document.querySelector('.proj-btn');
@@ -26,7 +25,7 @@ lockButton.forEach(element => {
   element.addEventListener('click', togglePalette)
 })
 
-function generateAllPalettes() {
+function generateAllPalettes () {
   let palettesArray = [];
   for(let i=0; i<5; i++) {
     let newPalette = generateNewPalette();
@@ -48,9 +47,10 @@ function fetchProjectNames () {
     .then(result => displayProjectNames(result))
 }
 
-function displayProjectNames (projects) {
+async function displayProjectNames (projects) {
   select.options.length = projects.length;
-  for (let i=0; i<projects.length; i++) {
+  document.querySelector('.project').innerText = '';
+  for (let i=0; i < projects.length; i++) {
     select.options[i] = new Option(`${projects[i].name}`, `${projects[i].id}`)
     displayNewProject(projects[i])
   }
@@ -68,11 +68,7 @@ function generateNewPalette () {
 }
 
 function savePalette () {
-  console.log(select.value)
   const selectedProjectId = select.value;
-  // projectName.innerHTML = paletteInput.value;
-  // var div = document.createElement('div');
-  // div.innerHTML = ``
   const postPalette = {
       palette: {
       palette_name: paletteInput.value,
