@@ -52,6 +52,7 @@ function displayProjectNames (projects) {
   select.options.length = projects.length;
   for (let i=0; i<projects.length; i++) {
     select.options[i] = new Option(`${projects[i].name}`, `${projects[i].id}`)
+    displayNewProject(projects[i])
   }
 }
 
@@ -74,12 +75,12 @@ function savePalette () {
   // div.innerHTML = ``
   const postPalette = {
       palette: {
-      palette_name: paletteInput,
+      palette_name: paletteInput.value,
       color_1: color1.innerText,
-      color_2: color1.innerText,
-      color_3: color1.innerText,
-      color_4: color1.innerText,
-      color_5: color1.innerText,
+      color_2: color2.innerText,
+      color_3: color3.innerText,
+      color_4: color4.innerText,
+      color_5: color5.innerText,
     }
   }
   
@@ -96,9 +97,30 @@ function savePalette () {
 }
 
 function displayNewPalette (palette) {
-  let paletteText = document.querySelector(`.${palette.project_id}`)
-  console.log(paletteText)
-  paletteText.innerHTML = palette.color_1
+  let paletteContainer = document.querySelector(`.proj-${palette.project_id}`)
+  // console.log(paletteText)
+  let newPalette = document.createElement('div');
+  newPalette.className = 'small-palettes'
+  newPalette.innerHTML = (`
+    <p>${palette.palette_name} </p>
+    <div class='small-circle palette-1' style='background-color:${palette.color_1}'>
+    </div>
+    <div class='small-circle palette-2'
+    style='background-color:${palette.color_2}'>
+    </div>
+    <div class='small-circle palette-3'
+    style='background-color:${palette.color_3}'>
+    </div>
+    <div class='small-circle palette-4'
+    style='background-color:${palette.color_4}'>
+    </div>
+    <div class='small-circle palette-5'
+    style='background-color:${palette.color_5}'>
+    </div>
+    `
+    
+  )
+  paletteContainer.appendChild(newPalette)
 }
 
 function saveProject () {
@@ -109,7 +131,7 @@ function saveProject () {
   };
   fetch('/api/v1/projects', {
     method: 'POST',
-    body: JSON.stringify(postObj), // data can be `string` or {object}!
+    body: JSON.stringify(postObj), 
     headers:  {
     'Content-Type': 'application/json'
     }
@@ -122,9 +144,10 @@ function saveProject () {
 
 function displayNewProject (project) {
   var newProject = document.createElement('div');
+  let projectClass = `proj-${project.id}`
   newProject.innerHTML = (`<div> 
     <h3 class='project-name'>  ${project.name} </h3>
-    <p class=${project.id} > </p>
+    <p class=${projectClass} > </p>
   </div>`);
   document.querySelector('.project').appendChild(newProject)
   newProjectInput.value = '';
