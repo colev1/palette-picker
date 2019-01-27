@@ -1,12 +1,17 @@
 document.addEventListener("DOMContentLoaded", generateAllPalettes);
 document.addEventListener("DOMContentLoaded", fetchProjectNames);
 
-
 var generateBtn = document.querySelector('.generate-btn')
 var projectName = document.querySelector('.project-name')
 var saveProjectBtn = document.querySelector('.proj-btn');
 var newProjectInput = document.querySelector('.proj-input');
 var select = document.querySelector('select');
+let color1 = document.querySelector('.hex-1')
+let color2 = document.querySelector('.hex-2')
+let color3 = document.querySelector('.hex-3')
+let color4 = document.querySelector('.hex-4')
+let color5 = document.querySelector('.hex-5')
+
 
 var savePaletteBtn = document.querySelector('.save-btn')
 var paletteInput = document.querySelector('.palette-name')
@@ -20,7 +25,7 @@ lockButton.forEach(element => {
   element.addEventListener('click', togglePalette)
 })
 
-function generateAllPalettes() {
+function generateAllPalettes () {
   let palettesArray = [];
   for(let i=0; i<5; i++) {
     let newPalette = generateNewPalette();
@@ -42,13 +47,13 @@ function fetchProjectNames () {
     .then(result => displayProjectNames(result))
 }
 
-function displayProjectNames (projects) {
-  let projNames = projects.map(project => project.name)
-  select.options.length = projNames.length;
-  for (let i=0; i<projNames.length; i++) {
-    select.options[i] = new Option(`${projNames[i]}`)
+async function displayProjectNames (projects) {
+  select.options.length = projects.length;
+  document.querySelector('.project').innerText = '';
+  for (let i=0; i < projects.length; i++) {
+    select.options[i] = new Option(`${projects[i].name}`, `${projects[i].id}`)
+    displayNewProject(projects[i])
   }
-  console.log(projNames)
 }
 
 function generateNewPalette () {
@@ -63,10 +68,55 @@ function generateNewPalette () {
 }
 
 function savePalette () {
-  console.log(paletteInput.value)
-  projectName.innerHTML = paletteInput.value;
-  // var div = document.createElement('div');
-  // div.innerHTML = ``
+  const selectedProjectId = select.value;
+  const postPalette = {
+      palette: {
+      palette_name: paletteInput.value,
+      color_1: color1.innerText,
+      color_2: color2.innerText,
+      color_3: color3.innerText,
+      color_4: color4.innerText,
+      color_5: color5.innerText,
+    }
+  }
+  
+  fetch(`/api/v1/projects/${selectedProjectId}/palettes`, {
+    method: 'POST',
+    body: JSON.stringify(postPalette), 
+    headers:  {
+    'Content-Type': 'application/json'
+    }
+  })
+    .then(response => response.json())
+    .then(result => displayNewPalette(result))
+    .catch(error => console.log(error))
+}
+
+function displayNewPalette (palette) {
+  let paletteContainer = document.querySelector(`.proj-${palette.project_id}`)
+  // console.log(paletteText)
+  let newPalette = document.createElement('div');
+  newPalette.className = 'small-palettes'
+  newPalette.innerHTML = (`
+    <p>${palette.palette_name} </p>
+    <div class='small-circle palette-1' style='background-color:${palette.color_1}'>
+    </div>
+    <div class='small-circle palette-2'
+    style='background-color:${palette.color_2}'>
+    </div>
+    <div class='small-circle palette-3'
+    style='background-color:${palette.color_3}'>
+    </div>
+    <div class='small-circle palette-4'
+    style='background-color:${palette.color_4}'>
+    </div>
+    <div class='small-circle palette-5'
+    style='background-color:${palette.color_5}'>
+    </div>
+    `
+    
+  )
+  paletteContainer.appendChild(newPalette)
 }
 
 function saveProject () {
@@ -77,7 +127,7 @@ function saveProject () {
   };
   fetch('/api/v1/projects', {
     method: 'POST',
-    body: JSON.stringify(postObj), // data can be `string` or {object}!
+    body: JSON.stringify(postObj), 
     headers:  {
     'Content-Type': 'application/json'
     }
@@ -85,12 +135,15 @@ function saveProject () {
     .then(response => response.json())
     .then(result => displayNewProject(result))
     .catch(error => console.log(error))
+    fetchProjectNames()
 }
 
 function displayNewProject (project) {
   var newProject = document.createElement('div');
+  let projectClass = `proj-${project.id}`
   newProject.innerHTML = (`<div> 
     <h3 class='project-name'>  ${project.name} </h3>
+    <p class=${projectClass} > </p>
   </div>`);
   document.querySelector('.project').appendChild(newProject)
   newProjectInput.value = '';
