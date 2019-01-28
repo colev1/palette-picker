@@ -5,6 +5,8 @@ var generateBtn = document.querySelector('.generate-btn')
 var projectName = document.querySelector('.project-name')
 var saveProjectBtn = document.querySelector('.proj-btn');
 var newProjectInput = document.querySelector('.proj-input');
+var smallPalettes = document.querySelector('.small-palettes');
+
 var select = document.querySelector('select');
 let color1 = document.querySelector('.hex-1')
 let color2 = document.querySelector('.hex-2')
@@ -24,6 +26,7 @@ saveProjectBtn.addEventListener('click', saveProject)
 lockButton.forEach(element => {
   element.addEventListener('click', togglePalette)
 })
+smallPalettes.addEventListener('click', displaySinglePalette)
 
 function generateAllPalettes () {
   let palettesArray = [];
@@ -53,7 +56,21 @@ async function displayProjectNames (projects) {
   for (let i=0; i < projects.length; i++) {
     select.options[i] = new Option(`${projects[i].name}`, `${projects[i].id}`)
     displayNewProject(projects[i])
+    fetchPalettes(projects[i].id)
   }
+}
+
+function fetchPalettes (id) {
+  
+  fetch(`/api/v1/projects/${id}/palettes`)
+    .then(response => response.json())
+    .then(result => displayPalettes(result))
+}
+
+function displayPalettes (palettes) {
+  palettes.forEach(palette => {
+    displayNewPalette(palette)
+  })
 }
 
 function generateNewPalette () {
@@ -119,6 +136,10 @@ function displayNewPalette (palette) {
   paletteContainer.appendChild(newPalette)
 }
 
+function displaySinglePalette () {
+
+}
+
 function saveProject () {
   const postObj = {
     project: {
@@ -134,8 +155,8 @@ function saveProject () {
   })
     .then(response => response.json())
     .then(result => displayNewProject(result))
+    .then(result => fetchProjectNames())
     .catch(error => console.log(error))
-    fetchProjectNames()
 }
 
 function displayNewProject (project) {

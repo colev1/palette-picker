@@ -22,7 +22,8 @@ app.get('/api/v1/projects', (request, response) => {
 });
 
 //get all palettes from a specific project 
-app.get('/api/v1/projects/:id', (request, response) => {
+app.get('/api/v1/projects/:id/palettes', (request, response) => {
+  console.log(request.params)
   const id = parseInt(request.params.id);
   database('palettes').select()
     .then((palettes) => {
