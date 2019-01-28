@@ -5,7 +5,9 @@ var generateBtn = document.querySelector('.generate-btn')
 var projectName = document.querySelector('.project-name')
 var saveProjectBtn = document.querySelector('.proj-btn');
 var newProjectInput = document.querySelector('.proj-input');
-var smallPalettes = document.querySelector('.small-palettes');
+var smallPalettes = document.querySelector('.project');
+var allHexes = document.querySelectorAll('.hex');
+var allCircles = document.querySelectorAll('.circle');
 
 var select = document.querySelector('select');
 let color1 = document.querySelector('.hex-1')
@@ -34,8 +36,6 @@ function generateAllPalettes () {
     let newPalette = generateNewPalette();
     palettesArray.push(newPalette)
   }
-  let allHexes = document.querySelectorAll('.hex');
-  let allCircles = document.querySelectorAll('.circle');
   for(let i=0; i<allHexes.length; i++) {
     if(!allCircles[i].classList.contains('locked')) {
       allHexes[i].innerHTML = `#${palettesArray[i]}`
@@ -50,7 +50,7 @@ function fetchProjectNames () {
     .then(result => displayProjectNames(result))
 }
 
-async function displayProjectNames (projects) {
+function displayProjectNames (projects) {
   select.options.length = projects.length;
   document.querySelector('.project').innerText = '';
   for (let i=0; i < projects.length; i++) {
@@ -111,9 +111,8 @@ function savePalette () {
 
 function displayNewPalette (palette) {
   let paletteContainer = document.querySelector(`.proj-${palette.project_id}`)
-  // console.log(paletteText)
-  let newPalette = document.createElement('div');
-  newPalette.className = 'small-palettes'
+  let newPalette = document.createElement('li');
+  newPalette.className = `small-palettes p-id-${palette.id}`
   newPalette.innerHTML = (`
     <p>${palette.palette_name} </p>
     <div class='small-circle palette-1' style='background-color:${palette.color_1}'>
@@ -130,14 +129,34 @@ function displayNewPalette (palette) {
     <div class='small-circle palette-5'
     style='background-color:${palette.color_5}'>
     </div>
+    <i class="fa fa-trash" aria-hidden="true"></i>
     `
     
   )
   paletteContainer.appendChild(newPalette)
 }
 
-function displaySinglePalette () {
+function displaySinglePalette (e) {
+  const paletteId = e.target.closest('li').classList[1].slice(5)
+  if (!e.target.classList.contains('fa-trash')) {
+  fetch(`api/v1/projects/1/palettes/${paletteId}`)
+    .then(response => response.json())
+    .then(result => showSelectedPalette(result))
+  } else {
+    deletePalette(paletteId)
+  }
+}
 
+function deletePalette (id) {
+  
+}
+
+function showSelectedPalette (palette) {
+  let palettesArray = [palette.color_1, palette.color_2, palette.color_3, palette.color_4, palette.color_5]
+  for(let i=0; i<allHexes.length; i++) {
+      allHexes[i].innerHTML = `${palettesArray[i]}`
+      allCircles[i].style.backgroundColor = `${palettesArray[i]}`
+  }
 }
 
 function saveProject () {
