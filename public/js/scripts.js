@@ -148,7 +148,15 @@ function displaySinglePalette (e) {
 }
 
 function deletePalette (id) {
-  
+  fetch(`/api/v1/palettes/${id}`, {
+    method: 'DELETE',
+    body: JSON.stringify({id}),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => response.json())
+  .then(result => fetchProjectNames())
 }
 
 function showSelectedPalette (palette) {
