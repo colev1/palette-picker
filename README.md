@@ -13,6 +13,12 @@ Palette Picker is an application that allows the user to randomly generate a 'pa
 ## Deployment
 This application is deployed on heroku and can be viewed here: [Heroku Link](https://cv-palette-picker.herokuapp.com/)
 
-##Wireframes
+## Design and Layout
 
-![Wireframe 1](./images)
+### Wireframe
+
+![Wireframe](images/wireframe.png)
+
+### Live App
+
+![App ](./images/app.png)
