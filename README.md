@@ -17,8 +17,8 @@ This application is deployed on heroku and can be viewed here: [Heroku Link](htt
 
 ### Wireframe
 
-![Wireframe](images/wireframe.png)
+![Wireframe](public/wireframe.png)
 
 ### Live App
 
-![App ](./images/app.png)
+![App ](public/app.png)
