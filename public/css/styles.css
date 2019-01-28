@@ -92,8 +92,13 @@ section {
   align-items: center;
 }
 
-button:hover, select:hover {
+button:hover, select:hover{
   background-color: black;
+  cursor: pointer;
+}
+
+.fa-trash:hover  {
+  color: grey;
   cursor: pointer;
 }
 
