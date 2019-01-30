@@ -55,7 +55,7 @@ app.post('/api/v1/projects', (request, response) => {
   //desctructure the new project from the body of the post request
   const { project } = request.body;
   //create a unique id for the new project
-  for( let requiredParameter of ['name'] ) {
+  for ( let requiredParameter of ['name'] ) {
     if( !project[requiredParameter]) {
       return response
         .status(422)
@@ -108,3 +108,5 @@ app.delete('/api/v1/palettes/:palette_id', (request, response) => {
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });
+
+
