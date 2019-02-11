@@ -1,4 +1,4 @@
-# palette-picker
+# Palette Picker
 
 ## Description
 Palette Picker is an application that allows the user to randomly generate a 'palette' of 5 colors, and then save seperate palettes to different project folders. This application utilizes a frontend and a backend.
