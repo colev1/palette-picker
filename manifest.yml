@@ -1,0 +1,6 @@
+---
+applications:
+- name: palette-picker
+  random-route: true
+  command: node server.js
+  memory: 500M
